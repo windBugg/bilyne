@@ -32,9 +32,13 @@ public class Program
 					memory[ptr] += Convert.ToByte(Int32.Parse(parts[1]));
 					break;
 				case "sub": // Subtract val from current location in memory, takes one arguement
-					memory[ptr] -= Convert.ToByte(Int32.Parse(parts[1]));
+					memory[ptr] -= Convert.ToByte(Int32.Parse(parts[1]));					
 					break;
 				
+				case "str": // Takes a string as input, writes it to memory. Take one arguement, single word no spaces
+					StringToBytes(parts[1]);
+					break;
+						
 				case "lft": // Move pointer one left, takes no arguments
 					if (ptr == 0) {ptr = 255;}
 					else { ptr -= 1; }
@@ -81,37 +85,29 @@ public class Program
 	public static string outputBytesFromMemory(int reach, string finalString)
 	{
 		for (int i = 0; i < reach; i++) { finalString += Convert.ToString(memory[ptr + i]) + " "; }
-		return finalString;
+		return finalString;		
+	}
+	
+	public static void StringToBytes(string input)
+	{
+		int i = 0;
+		
+		foreach (char c in input)
+		{
+			try	{ memory[ptr + i] = Convert.ToByte(c); }
+			catch { Console.WriteLine("Convert failed. Invalid charater/OOR?"); }
+			
+			i += 1;
+		}
+		ptr += i;
 	}
 	
 	public static void turingTest()
 	{
-		func.Add("add 72");
-		func.Add("rgt"); // H
-		func.Add("add 101");
-		func.Add("rgt"); // e
-		func.Add("add 108");
-		func.Add("rgt"); // l
-		func.Add("add 108");
-		func.Add("rgt"); // l
-		func.Add("add 111");
-		func.Add("rgt"); // o
-		func.Add("add 44");
-		func.Add("rgt"); // ,
+		func.Add("str Hello,");
 		func.Add("add 32");
-		func.Add("rgt"); // [SPACE]
-		func.Add("add 119");
-		func.Add("rgt"); // w
-		func.Add("add 111");
-		func.Add("rgt"); // o
-		func.Add("add 114");
-		func.Add("rgt"); // r
-		func.Add("add 108");
-		func.Add("rgt"); // l
-		func.Add("add 100");
-		func.Add("rgt"); // d
-		func.Add("add 33");
-		func.Add("rgt"); // !
+		func.Add("rgt");
+		func.Add("str world!");
 		
 		func.Add("jmp 0");
 		func.Add("out 0 13");
